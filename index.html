@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Streaming with Skip Buttons</title>
+  <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+  <style>
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+    }
+    .video-container video {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .custom-controls {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .custom-controls button {
+      padding: 8px 16px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>สตรีมสดแบบ Adaptive Bitrate (HLS/DASH) + ปุ่มเลื่อนเวลา</h2>
+
+  <div class="video-container">
+    <video id="my-video" class="video-js vjs-default-skin" controls autoplay muted playsinline></video>
+  </div>
+
+  <!-- ปุ่ม Forward/Backward -->
+  <div class="custom-controls">
+    <button onclick="skip(-10)">⏪ ย้อนหลัง 10 วิ</button>
+    <button onclick="skip(10)">⏩ กอไปข้างหน้า 10 วิ</button>
+  </div>
+
+  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  <script src="https://unpkg.com/videojs-http-streaming@latest/dist/videojs-http-streaming.min.js"></script>
+
+  <script>
+    var player = videojs('my-video');
+
+    var hlsSource = {
+      src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      type: 'application/x-mpegURL'
+    };
+
+    var dashSource = {
+      src: 'https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd',
+      type: 'application/dash+xml'
+    };
+
+    var canPlayHLS = player.canPlayType('application/x-mpegURL') !== '';
+
+    if (canPlayHLS) {
+      player.src(hlsSource);
+    } else {
+      player.src(dashSource);
+    }
+
+    // ฟังก์ชันเลื่อนเวลา
+    function skip(seconds) {
+      var currentTime = player.currentTime();
+      player.currentTime(currentTime + seconds);
+    }
+  </script>
+</body>
+</html>
