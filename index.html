@@ -3,76 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adaptive Streaming with Skip Buttons</title>
-  <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+  <title>รวมวิดีโอจากหลายแหล่ง</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <style>
     .video-container {
-      position: relative;
-      width: 100%;
       max-width: 600px;
-      margin: auto;
-    }
-    .video-container video {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-    .custom-controls {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .custom-controls button {
-      padding: 8px 16px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 6px;
-      cursor: pointer;
+      margin: 20px auto;
     }
   </style>
 </head>
 <body>
-  <h2>สตรีมสดแบบ Adaptive Bitrate (HLS/DASH) + ปุ่มเลื่อนเวลา</h2>
+  <h2>ตัวอย่างการเล่นวิดีโอจากหลายแหล่งด้วย Plyr</h2>
 
+  <!-- วิดีโอจาก Google Drive -->
   <div class="video-container">
-    <video id="my-video" class="video-js vjs-default-skin" controls autoplay muted playsinline></video>
+    <h3>Google Drive</h3>
+    <video id="drive-video" playsinline controls>
+      <!-- วางลิงก์ Google Drive ตรงนี้ -->
+      <source src="https://drive.google.com/uc?export=download&id=YOUR_FILE_ID" type="video/mp4" />
+    </video>
   </div>
 
-  <!-- ปุ่ม Forward/Backward -->
-  <div class="custom-controls">
-    <button onclick="skip(-10)">⏪ ย้อนหลัง 10 วิ</button>
-    <button onclick="skip(10)">⏩ กอไปข้างหน้า 10 วิ</button>
+  <!-- วิดีโอจากไฟล์ MP4 บนเซิร์ฟเวอร์ -->
+  <div class="video-container">
+    <h3>ไฟล์ MP4 จากเซิร์ฟเวอร์</h3>
+    <video id="mp4-video" playsinline controls>
+      <https://xn--69-uqi6eta7bs4j9f.xyz/7330>
+      <source src="https://example.com/video.mp4" type="video/mp4" />
+    </video>
   </div>
 
-  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
-  <script src="https://unpkg.com/videojs-http-streaming@latest/dist/videojs-http-streaming.min.js"></script>
+  <!-- วิดีโอสตรีม HLS (.m3u8) -->
+  <div class="video-container">
+    <h3>HLS Streaming</h3>
+    <video id="hls-video" playsinline controls>
+      <https://xn--69-uqi6eta7bs4j9f.xyz/7330>
+      <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL" />
+    </video>
+  </div>
 
+  <!-- วิดีโอสตรีม DASH (.mpd) -->
+  <div class="video-container">
+    <h3>DASH Streaming</h3>
+    <video id="dash-video" playsinline controls>
+      <https://xn--69-uqi6eta7bs4j9f.xyz/7330>
+      <source src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd" type="application/dash+xml" />
+    </video>
+  </div>
+
+  <!-- โหลด Plyr -->
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
-    var player = videojs('my-video');
-
-    var hlsSource = {
-      src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      type: 'application/x-mpegURL'
-    };
-
-    var dashSource = {
-      src: 'https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd',
-      type: 'application/dash+xml'
-    };
-
-    var canPlayHLS = player.canPlayType('application/x-mpegURL') !== '';
-
-    if (canPlayHLS) {
-      player.src(hlsSource);
-    } else {
-      player.src(dashSource);
-    }
-
-    // ฟังก์ชันเลื่อนเวลา
-    function skip(seconds) {
-      var currentTime = player.currentTime();
-      player.currentTime(currentTime + seconds);
-    }
+    const players = [
+      new Plyr('#drive-video'),
+      new Plyr('#mp4-video'),
+      new Plyr('#hls-video'),
+      new Plyr('#dash-video')
+    ];
   </script>
 </body>
 </html>
